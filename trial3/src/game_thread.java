@@ -1,0 +1,100 @@
+import java.awt.*;
+import java.util.ArrayList;
+
+public class game_thread extends Thread{
+
+    //JFrame mf = Tetris_m.m_frame;
+
+    public void run(){
+        for(int i = 0; i < 1000; i++){
+
+            if(i < 20) Tetris_m.status[34][i] = 1;
+            //else Tetris_m.status[i-20][i-20] = 2;
+
+            update_cBock_loc();
+            update_shape_to_stat();
+
+            //Tetris_m.g_panel = new game_panel(); // 이 부분이 문제. 새로운 패널을 만드는 것이 아니라 기존 패널을 revalidate해야 한다.
+            Tetris_m.g_panel.revalidate();
+            Tetris_m.g_panel.repaint(); //
+
+            // 1. 현재는 여기서 하도록 되어있지만 나중에는 입력에 따라 즉시 동작할 수 있도록 수정해야함
+            // 2. 아마 actionlistener로 입력을 받을 때 즉각 업데이트 할 수 있도록 해야하며 그러기 위해
+            // revalidate, repaint를 특정 시간마다 호출하는 것이 아닌, 특정 사건마다 호출할 수 잇도록 해야한다.
+            // 3. 아마 메인 thread에서 타이머를 잡고 이 시간을 따라가되 입력이 들어올 경우 즉시 반응하도록 구현 메인 class에 작성할 수도
+            // 아니면 일정시간마다 revalidate하되 입력이 들어오는 경우도 revalidate하도록 따로 할 수도, 이 경우 synchronize가 필요할 것
+
+            try{
+                Thread.sleep(300);
+            }
+            catch(Exception e){}
+        }
+    }
+    /*
+    current block 위치를 다음 위치로 업데이트
+    다음 위치에서 block 자신을 제외하고 충돌이 일어나는 경우 can_proceed를 false로 hit_floor_or_block을 true로 전환한다.
+    충돌이 없는 경우 기존에 stat에 있던 block를 제거하고 자기 자신의 위치값을 업데이트한다.
+    stat에 새 위치를 찍는 것은 update_shape_to_stat에서 진행한다.
+     */
+    private void update_cBock_loc(){
+        boolean can_proceed = true;
+
+        ArrayList<Point> tmp_block_loc = new ArrayList<>(Tetris_m.cBlock_loc); //  새 리스트 만들어 대조함. 자기 자신과 겹치는 것은 상관 없도록
+        for(Point p : Tetris_m.cBlock_loc){
+            boolean collapse_self = false;
+            for(Point p2 : tmp_block_loc){
+                if(p2.x == p.x && p2.y == p.y+1) collapse_self = true;
+            }
+            if(Tetris_m.status[p.y+1][p.x] != 0 && !collapse_self) can_proceed = false;
+        }
+        if(!can_proceed){
+            Tetris_m.hit_floor_or_block = true;
+            return;
+        }
+        for(Point p : Tetris_m.cBlock_loc){
+            Tetris_m.status[p.y][p.x] = 0; // 기존에 있던 위치의 stat 초기화
+            p.y++;
+        }
+    }
+    /*
+
+     */
+    private void update_shape_to_stat(){
+        // 블록의 위치 표시는 두 가지,
+        // 1. 블록당 20*35 크기의 배열을 하나씩 할당하여 그 위에서의 절대적 좌표를 잡는 방식 또는 pair 꼴로 그 좌표를 전부 저장
+        // 2. 블록 기준점 x, y를 메인 클래스에 static 변수로 두고 그로부터 각 블록별로 모양에 따라 상대적 좌표를 잡아 계산하는 것.
+        // 1은 블록의 좌표 표시 자체에는 오버헤드가 크나 2가 이후 연산에서 훨씬 큰 오버헤드를 내므로 1로 한다.
+
+        int block_color = Tetris_m.cBlock / 10;
+        // 1 : light gray
+        // 2 : red
+        // 3 : blue
+        // 4 : green
+        // 5 : purple
+
+        for(Point p : Tetris_m.cBlock_loc){
+            Tetris_m.status[p.y][p.x] = block_color;
+        }
+
+        // 여기에서 g_panel revalidate하기 전 stat의 모든 행을 한 번 확인한다. 확인 후 한 행이 모두 0 이 아닌 경우 그 행을 날린다.
+        // tmp_stat에 저장해 둔 뒤 이를 원래 행렬에 덮어씌운다.
+        int line_clear = 0;
+        int[][] tmp_stat = new int[35][20];
+        int m = 34, n = 0;
+        for(int i = 34; i >= 0; i--){
+            for(int j = 0; j < 20; j++){
+                //
+                tmp_stat[m][n] = Tetris_m.status[i][j]; // current block에 속하는 경우 처리하지 않고
+                n++;
+                if(Tetris_m.status[i][j] != 0) line_clear++;
+            }
+            if(line_clear != 20) m--;
+            line_clear = 0;
+            n = 0;
+        }
+        // current block에 속하는 경우를 밖에서 처리한다. 그래야
+        Tetris_m.status = tmp_stat;
+    }
+
+    // 주의! current block은 바꾸면 안된다. 
+}
