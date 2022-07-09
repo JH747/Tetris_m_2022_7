@@ -12,6 +12,8 @@ public class Tetris_m extends JFrame {
     static JPanel nb_panel;
     static JFrame m_frame;
 
+    static int score = 0;
+
     // TODO : current block and next block
     static int cBlock = 21; // 현재 block 종류 (11, 21, 22, 23, 24, 31, 32, 33, 34, 41, 42, 51, 52, 53, 54)
     static ArrayList<uPoint> cBlock_loc = new ArrayList<>(); // 현재 block 위치

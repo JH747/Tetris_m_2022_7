@@ -9,7 +9,7 @@ public class game_thread extends Thread{
             //else Tetris_m.status[i-20][i-20] = 2;
 
             update_cBock_loc();
-            update_shape_to_stat();
+            update_stat();
 
             //Tetris_m.g_panel = new game_panel(); // 이 부분이 문제. 새로운 패널을 만드는 것이 아니라 기존 패널을 revalidate해야 한다.
             Tetris_m.g_panel.revalidate();
@@ -63,7 +63,7 @@ public class game_thread extends Thread{
     /*
 
      */
-    private void update_shape_to_stat(){
+    private void update_stat(){
         // 블록의 위치 표시는 두 가지,
         // 1. 블록당 20*35 크기의 배열을 하나씩 할당하여 그 위에서의 절대적 좌표를 잡는 방식 또는 pair 꼴로 그 좌표를 전부 저장
         // 2. 블록 기준점 x, y를 메인 클래스에 static 변수로 두고 그로부터 각 블록별로 모양에 따라 상대적 좌표를 잡아 계산하는 것.
@@ -96,6 +96,7 @@ public class game_thread extends Thread{
                 if(Tetris_m.status[i][j] != 0) line_clear++;
             }
             if(line_clear != 20) m--;
+            else Tetris_m.score++;
             line_clear = 0;
             n = 0;
         }
