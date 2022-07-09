@@ -8,8 +8,11 @@ public class game_thread extends Thread{
             if(i < 20) Tetris_m.status[34][i] = 1;
             //else Tetris_m.status[i-20][i-20] = 2;
 
-            update_cBock_loc();
+            update_cBock_loc(); // 바닥에 닿았는지 여기서 확인됨
+
             update_stat();
+
+            if(Tetris_m.hit_floor_or_block) update_nBlock_and_update_stat();
 
             //Tetris_m.g_panel = new game_panel(); // 이 부분이 문제. 새로운 패널을 만드는 것이 아니라 기존 패널을 revalidate해야 한다.
             Tetris_m.g_panel.revalidate();
@@ -45,6 +48,7 @@ public class game_thread extends Thread{
             // 최하단에 닿은 경우
             if(p.y == 34){
                 can_proceed = false;
+                Tetris_m.hit_floor_or_block = true;
                 break;
             }
             collapse_self = uPoint.doesHave(p.x, p.y+1, Tetris_m.cBlock_loc); // 자기 자신과 겹치는 것은 상관 없도록
@@ -60,9 +64,7 @@ public class game_thread extends Thread{
             p.y++;
         }
     }
-    /*
 
-     */
     private void update_stat(){
         // 블록의 위치 표시는 두 가지,
         // 1. 블록당 20*35 크기의 배열을 하나씩 할당하여 그 위에서의 절대적 좌표를 잡는 방식 또는 pair 꼴로 그 좌표를 전부 저장
@@ -71,11 +73,8 @@ public class game_thread extends Thread{
 
         // TODO : 이 아래 부분은 새 블록 추가하는 함수로 따로 구현 필요
         int block_color = Tetris_m.cBlock / 10;
-        // 1 : light gray
-        // 2 : red
-        // 3 : blue
-        // 4 : green
-        // 5 : purple
+        // 1 : light gray   2 : red     3 : blue
+        // 4 : green        5 : purple
 
         // 바닥을 친 경우 stat의 일부로 보고 이후의 line clearing의 적용 대상이 되도록 한다.
         if(Tetris_m.hit_floor_or_block){
@@ -108,6 +107,54 @@ public class game_thread extends Thread{
                 Tetris_m.status[p.y][p.x] = block_color;
             }
         }
+    }
+
+    private void update_nBlock_and_update_stat(){
+        // cBlock을 바꾸는 경우 코드가 꼬이므로 update_stat 이후에 바뀌도록 한다.
+        // stat도 업데이트 하되 여기서 충돌이 나는 경우 game over 이다.
+        int nBlockShape = (int)(Math.random()*4) + 1; // 0부터 4의 난수
+        Tetris_m.cBlock_loc.clear();
+        switch (nBlockShape){
+            case 1:
+                Tetris_m.cBlock = 11;
+                Tetris_m.cBlock_loc.add(new uPoint(9,0));
+                Tetris_m.cBlock_loc.add(new uPoint(10,0));
+                Tetris_m.cBlock_loc.add(new uPoint(9,1));
+                Tetris_m.cBlock_loc.add(new uPoint(10,1));
+                break;
+            case 2:
+                Tetris_m.cBlock = 21;
+                Tetris_m.cBlock_loc.add(new uPoint(9,0));
+                Tetris_m.cBlock_loc.add(new uPoint(9,1));
+                Tetris_m.cBlock_loc.add(new uPoint(9,2));
+                Tetris_m.cBlock_loc.add(new uPoint(10,2));
+                break;
+            case 3:
+                Tetris_m.cBlock = 31;
+                Tetris_m.cBlock_loc.add(new uPoint(10,0));
+                Tetris_m.cBlock_loc.add(new uPoint(10,1));
+                Tetris_m.cBlock_loc.add(new uPoint(10,2));
+                Tetris_m.cBlock_loc.add(new uPoint(9,2));
+                break;
+            case 4:
+                Tetris_m.cBlock = 41;
+                Tetris_m.cBlock_loc.add(new uPoint(9,0));
+                Tetris_m.cBlock_loc.add(new uPoint(9,1));
+                Tetris_m.cBlock_loc.add(new uPoint(9,2));
+                Tetris_m.cBlock_loc.add(new uPoint(9,3));
+                break;
+            case 5:
+                Tetris_m.cBlock = 51;
+                Tetris_m.cBlock_loc.add(new uPoint(10,0));
+                Tetris_m.cBlock_loc.add(new uPoint(9,1));
+                Tetris_m.cBlock_loc.add(new uPoint(10,1));
+                Tetris_m.cBlock_loc.add(new uPoint(11,1));
+                break;
+            default:
+                break;
+        }
+
+        Tetris_m.hit_floor_or_block = false; // 원위치
     }
 
 }

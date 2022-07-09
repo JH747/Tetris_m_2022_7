@@ -17,15 +17,12 @@ public class Tetris_m extends JFrame {
     // TODO : current block and next block
     static int cBlock = 21; // 현재 block 종류 (11, 21, 22, 23, 24, 31, 32, 33, 34, 41, 42, 51, 52, 53, 54)
     static ArrayList<uPoint> cBlock_loc = new ArrayList<>(); // 현재 block 위치
-    static int nBlock = 31; // 다음 block
+//    static int nBlock = 31;
+//    static ArrayList<uPoint> nBlock_loc = new ArrayList<>();
+
+    static int[] blockShapes = {11, 21, 22, 23, 24, 31, 32, 33, 34, 41, 42, 51, 52, 53, 54}; // 15 개 종류
 
     static boolean hit_floor_or_block = false;
-
-    public static final int BLOCK1 = 1;
-    public static final int BLOCK2 = 2;
-    public static final int BLOCK3 = 3;
-    public static final int BLOCK4 = 4;
-    public static final int BLOCK5 = 5;
 
     public Tetris_m(){
 
