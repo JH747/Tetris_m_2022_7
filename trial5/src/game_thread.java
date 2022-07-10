@@ -171,6 +171,9 @@ public class game_thread extends Thread{
     }
 
     private void view_gameOver_frame(){
+
+        Tetris_m.t_thread.interrupt(); // 먼저 timer_thread를 날린다.
+
         JFrame gameOver_frame = new JFrame();
         gameOver_frame.setTitle("Warning!");
         gameOver_frame.setSize(300, 200);
@@ -211,7 +214,9 @@ public class game_thread extends Thread{
                 Tetris_m.restart(); // shared 전역변수 초기화
                 // IllegalThreadStateException 제거, 하나의 thread를 여러번 start하지 않도록 새로운 thread 생성
                 Tetris_m.g_thread = new game_thread();
+                Tetris_m.t_thread = new timer_thread();
                 Tetris_m.g_thread.start();
+                Tetris_m.t_thread.start();
             }
         });
         restart_btn.setText("Restart");

@@ -7,13 +7,13 @@ public class Tetris_m extends JFrame {
 
     // TODO : basic components
     static int[][] status = new int[35][20];
-    static JPanel t_panel;
+
     static game_panel g_panel;
-    static JPanel s_panel;
     static JPanel nb_panel;
     static JFrame m_frame;
 
     static game_thread g_thread;
+    static timer_thread t_thread;
 
     // TODO : game progress control
     static boolean pause = false;
@@ -21,8 +21,11 @@ public class Tetris_m extends JFrame {
 
     // TODO : score and time
     static int score = 0;
-    static JLabel s_label = new JLabel();
     static int time_spent = 0;
+    static JPanel s_panel;
+    static JLabel s_label = new JLabel();
+    static JPanel t_panel;
+    static JLabel t_label = new JLabel();
 
     // TODO : current block and next block
     static int cBlock = 21; // 현재 block 종류 (11, 21, 22, 23, 24, 31, 32, 33, 34, 41, 42, 51, 52, 53, 54)
@@ -77,8 +80,12 @@ public class Tetris_m extends JFrame {
         t_panel.setBounds(420, 300, 150, 150);
         t_panel.setBorder(new LineBorder(Color.BLACK));
         t_panel.setLayout(null);
-        timer_thread th1 = new timer_thread();
-        th1.start();
+        t_label.setBounds(15,20,120,50);
+        t_label.setBorder(new LineBorder(Color.BLACK));
+        t_label.setHorizontalAlignment(JLabel.CENTER);
+        t_panel.add(t_label);
+        t_thread = new timer_thread();
+        t_thread.start();
     }
 
     private void set_g_panel(){
