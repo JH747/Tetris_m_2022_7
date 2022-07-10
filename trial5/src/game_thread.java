@@ -208,8 +208,10 @@ public class game_thread extends Thread{
             @Override
             public void actionPerformed(ActionEvent e) {
                 gameOver_frame.setVisible(false);
-                Tetris_m.restart();
-                //Tetris_m.g_thread.start();
+                Tetris_m.restart(); // shared 전역변수 초기화
+                // IllegalThreadStateException 제거, 하나의 thread를 여러번 start하지 않도록 새로운 thread 생성
+                Tetris_m.g_thread = new game_thread();
+                Tetris_m.g_thread.start();
             }
         });
         restart_btn.setText("Restart");

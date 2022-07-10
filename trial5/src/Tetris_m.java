@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class Tetris_m extends JFrame {
 
+    // TODO : basic components
     static int[][] status = new int[35][20];
     static JPanel t_panel;
     static game_panel g_panel;
@@ -28,20 +29,18 @@ public class Tetris_m extends JFrame {
     static ArrayList<uPoint> cBlock_loc = new ArrayList<>(); // 현재 block 위치
 //    static int nBlock = 31;
 //    static ArrayList<uPoint> nBlock_loc = new ArrayList<>();
+    static boolean hit_floor_or_block = true;
 
-    static int[] blockShapes = {11, 21, 22, 23, 24, 31, 32, 33, 34, 41, 42, 51, 52, 53, 54}; // 15 개 종류
-
-    static boolean hit_floor_or_block = false;
+    //static int[] blockShapes = {11, 21, 22, 23, 24, 31, 32, 33, 34, 41, 42, 51, 52, 53, 54}; // 15 개 종류
 
     public Tetris_m(){
 
         // TODO : for block shape check, must be removed
-        cBlock_loc.add(new uPoint(9,0));
-        cBlock_loc.add(new uPoint(9,1));
-        cBlock_loc.add(new uPoint(9,2));
-        cBlock_loc.add(new uPoint(10,2));
-        // TODO ----------------------------------------
-
+//        cBlock_loc.add(new uPoint(9,0));
+//        cBlock_loc.add(new uPoint(9,1));
+//        cBlock_loc.add(new uPoint(9,2));
+//        cBlock_loc.add(new uPoint(10,2));
+        // ---------------------------------------------
 
         this.setTitle("Tetris_m 2022_7");
         this.setSize(600, 800);
@@ -115,6 +114,11 @@ public class Tetris_m extends JFrame {
         time_spent = 0;
         cBlock = 21;
         cBlock_loc = new ArrayList<>();
+        hit_floor_or_block = true; // so that block canbe generated automatically
+//        cBlock_loc.add(new uPoint(9,0));
+//        cBlock_loc.add(new uPoint(9,1));
+//        cBlock_loc.add(new uPoint(9,2));
+//        cBlock_loc.add(new uPoint(10,2));
     }
 
 
