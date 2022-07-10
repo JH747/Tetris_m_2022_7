@@ -15,4 +15,11 @@ public class uPoint {
         }
         return false;
     }
+
+    public static boolean doesCollide(List<uPoint> c, int[][] arr){
+        for(uPoint p : c){
+            if(arr[p.y][p.x] != 0) return true;
+        }
+        return false;
+    }
 }

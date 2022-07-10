@@ -18,6 +18,7 @@ class timer_thread extends Thread{
         for(int i = 60; i > 0; i--){
             long time_passed = System.currentTimeMillis() - time_start;
             int rounded_time = (int) (time_passed/1000);
+            Tetris_m.time_spent = rounded_time;
             t_label.setText(Integer.toString(rounded_time));
             try{
                 Thread.sleep(1000);

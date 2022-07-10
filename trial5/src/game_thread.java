@@ -1,3 +1,9 @@
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 public class game_thread extends Thread{
 
     //JFrame mf = Tetris_m.m_frame;
@@ -5,6 +11,7 @@ public class game_thread extends Thread{
     public void run(){
         for(int i = 0; i < 1000; i++){
 
+            // below for checking line clearing, has to be removed
             if(i < 20) Tetris_m.status[34][i] = 1;
             //else Tetris_m.status[i-20][i-20] = 2;
 
@@ -13,6 +20,12 @@ public class game_thread extends Thread{
             update_stat();
 
             if(Tetris_m.hit_floor_or_block) update_nBlock_and_update_stat();
+
+            // TODO : game progress control
+            if(Tetris_m.gameOver){
+                view_gameOver_frame();
+                break;
+            }
 
             //Tetris_m.g_panel = new game_panel(); // 이 부분이 문제. 새로운 패널을 만드는 것이 아니라 기존 패널을 revalidate해야 한다.
             Tetris_m.g_panel.revalidate();
@@ -25,7 +38,7 @@ public class game_thread extends Thread{
             // 아니면 일정시간마다 revalidate하되 입력이 들어오는 경우도 revalidate하도록 따로 할 수도, 이 경우 synchronize가 필요할 것
 
             try{
-                Thread.sleep(200);
+                Thread.sleep(10);
             }
             catch(Exception e){}
         }
@@ -101,7 +114,7 @@ public class game_thread extends Thread{
         }
         Tetris_m.status = tmp_stat;
 
-        // 바닥을 치지 않은 경우 마지막에 추가하여 line clearing의 대상이 되지 않도록 한다.
+        // 바닥을 치지 않은 경우 stat의 일부로 보지 않고 마지막에 추가하여 line clearing의 대상이 되지 않도록 한다.
         if(!Tetris_m.hit_floor_or_block){
             for(uPoint p : Tetris_m.cBlock_loc){
                 Tetris_m.status[p.y][p.x] = block_color;
@@ -110,8 +123,8 @@ public class game_thread extends Thread{
     }
 
     private void update_nBlock_and_update_stat(){
-        // cBlock을 바꾸는 경우 코드가 꼬이므로 update_stat 이후에 바뀌도록 한다.
-        // stat도 업데이트 하되 여기서 충돌이 나는 경우 game over 이다.
+        // cBlock을 update_stat 이전에 바꾸는 경우 코드가 꼬이므로 update_stat 이후에 바뀌도록 한다.
+        // cBlock_loc은 물론 stat도 업데이트 하되 여기서 충돌이 나는 경우 game over 이다.
         int nBlockShape = (int)(Math.random()*4) + 1; // 0부터 4의 난수
         Tetris_m.cBlock_loc.clear();
         switch (nBlockShape){
@@ -153,8 +166,76 @@ public class game_thread extends Thread{
             default:
                 break;
         }
-
+        if(uPoint.doesCollide(Tetris_m.cBlock_loc, Tetris_m.status)) Tetris_m.gameOver = true;
         Tetris_m.hit_floor_or_block = false; // 원위치
+    }
+
+    private void view_gameOver_frame(){
+        JFrame gameOver_frame = new JFrame();
+        gameOver_frame.setTitle("Warning!");
+        gameOver_frame.setSize(300, 200);
+        gameOver_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        gameOver_frame.setLayout(null);
+
+        // TODO : gameOver message, score, time
+        JLabel l1 = new JLabel();
+        l1.setText("Game Over");
+        l1.setFont(new Font("Arial Bold", Font.ITALIC, 20));
+        l1.setBounds(50,0,200,50);
+        l1.setHorizontalAlignment(JLabel.CENTER);
+        //l1.setBorder(new LineBorder(Color.BLACK));
+        gameOver_frame.add(l1);
+
+        JLabel l2 = new JLabel();
+        l2.setText("Time : " + Tetris_m.time_spent);
+        l2.setFont(new Font("Arial Bold", Font.PLAIN, 15));
+        l2.setBounds(0,50,150,50);
+        l2.setHorizontalAlignment(JLabel.CENTER);
+        l2.setBorder(new LineBorder(Color.BLACK));
+        gameOver_frame.add(l2);
+
+        JLabel l3 = new JLabel();
+        l3.setText("Score : " + Tetris_m.score);
+        l3.setFont(new Font("Arial Bold", Font.PLAIN, 15));
+        l3.setBounds(150,50,150,50);
+        l3.setHorizontalAlignment(JLabel.CENTER);
+        l3.setBorder(new LineBorder(Color.BLACK));
+        gameOver_frame.add(l3);
+
+        // TODO : restart, exit btn
+        JButton restart_btn = new JButton();
+        restart_btn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                gameOver_frame.setVisible(false);
+                Tetris_m.restart();
+                //Tetris_m.g_thread.start();
+            }
+        });
+        restart_btn.setText("Restart");
+        restart_btn.setFont(new Font("Arial Bold", Font.PLAIN, 15));
+        restart_btn.setBounds(0,125,100,50);
+        restart_btn.setHorizontalAlignment(JLabel.CENTER);
+        restart_btn.setBorder(new LineBorder(Color.BLACK));
+        gameOver_frame.add(restart_btn);
+
+        JButton exit_btn = new JButton();
+        exit_btn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        exit_btn.setText("Exit");
+        exit_btn.setFont(new Font("Arial Bold", Font.PLAIN, 15));
+        exit_btn.setBounds(150,125,100,50);
+        exit_btn.setHorizontalAlignment(JLabel.CENTER);
+        exit_btn.setBorder(new LineBorder(Color.BLACK));
+        gameOver_frame.add(exit_btn);
+
+        gameOver_frame.setVisible(true);
+        gameOver_frame.setResizable(false);
+        gameOver_frame.setLocationRelativeTo(null);
     }
 
 }

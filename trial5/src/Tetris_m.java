@@ -12,8 +12,16 @@ public class Tetris_m extends JFrame {
     static JPanel nb_panel;
     static JFrame m_frame;
 
+    static game_thread g_thread;
+
+    // TODO : game progress control
+    static boolean pause = false;
+    static boolean gameOver = false;
+
+    // TODO : score and time
     static int score = 0;
     static JLabel s_label = new JLabel();
+    static int time_spent = 0;
 
     // TODO : current block and next block
     static int cBlock = 21; // 현재 block 종류 (11, 21, 22, 23, 24, 31, 32, 33, 34, 41, 42, 51, 52, 53, 54)
@@ -76,8 +84,8 @@ public class Tetris_m extends JFrame {
 
     private void set_g_panel(){
         g_panel.setBounds(10, 30, 400, 700);
-        game_thread th2 = new game_thread();
-        th2.start();
+        g_thread = new game_thread();
+        g_thread.start();
     }
 
     private void set_s_panel(){
@@ -96,6 +104,17 @@ public class Tetris_m extends JFrame {
         nb_panel.setBounds(420, 30, 150, 200);
         nb_panel.setBorder(new LineBorder(Color.BLACK));
         nb_panel.setLayout(null);
+    }
+
+    public static void restart(){
+        status = new int[35][20];
+        pause = false;
+        gameOver = false;
+
+        score = 0;
+        time_spent = 0;
+        cBlock = 21;
+        cBlock_loc = new ArrayList<>();
     }
 
 
