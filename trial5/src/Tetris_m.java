@@ -13,6 +13,7 @@ public class Tetris_m extends JFrame {
     static JFrame m_frame;
 
     static int score = 0;
+    static JLabel s_label = new JLabel();
 
     // TODO : current block and next block
     static int cBlock = 21; // 현재 block 종류 (11, 21, 22, 23, 24, 31, 32, 33, 34, 41, 42, 51, 52, 53, 54)
@@ -83,6 +84,12 @@ public class Tetris_m extends JFrame {
         s_panel.setBounds(420, 500, 150, 150);
         s_panel.setBorder(new LineBorder(Color.BLACK));
         s_panel.setLayout(null);
+        s_label.setBounds(15,20,120,50);
+        s_label.setBorder(new LineBorder(Color.BLACK));
+        s_label.setHorizontalAlignment(JLabel.CENTER);
+        s_label.setText(Integer.toString(score));
+        s_panel.add(s_label);
+
     }
 
     private void set_nb_panel(){

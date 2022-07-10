@@ -66,12 +66,9 @@ public class game_thread extends Thread{
     }
 
     private void update_stat(){
-        // 블록의 위치 표시는 두 가지,
-        // 1. 블록당 20*35 크기의 배열을 하나씩 할당하여 그 위에서의 절대적 좌표를 잡는 방식 또는 pair 꼴로 그 좌표를 전부 저장
-        // 2. 블록 기준점 x, y를 메인 클래스에 static 변수로 두고 그로부터 각 블록별로 모양에 따라 상대적 좌표를 잡아 계산하는 것.
-        // 1은 블록의 좌표 표시 자체에는 오버헤드가 크나 2가 이후 연산에서 훨씬 큰 오버헤드를 내므로 1로 한다.
+        // 블록의 위치 표시는 두 가지 방식 가능
+        // 한 개 기준점 중심 상대 위치와 절대 위치, 전자는 이후 오버헤드가 크므로 후자로 한다.
 
-        // TODO : 이 아래 부분은 새 블록 추가하는 함수로 따로 구현 필요
         int block_color = Tetris_m.cBlock / 10;
         // 1 : light gray   2 : red     3 : blue
         // 4 : green        5 : purple
@@ -95,7 +92,10 @@ public class game_thread extends Thread{
                 if(Tetris_m.status[i][j] != 0) line_clear++;
             }
             if(line_clear != 20) m--;
-            else Tetris_m.score++;
+            else{
+                Tetris_m.score++;
+                Tetris_m.s_label.setText(Integer.toString(Tetris_m.score));
+            }
             line_clear = 0;
             n = 0;
         }
