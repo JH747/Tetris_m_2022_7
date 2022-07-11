@@ -7,7 +7,7 @@ class timer_thread extends Thread{
 
         long time_start = System.currentTimeMillis();
 
-        for(int i = 60; i > 0; i--){
+        while(true){
             long time_passed = System.currentTimeMillis() - time_start;
             int rounded_time = (int) (time_passed/1000);
             Tetris_m.time_spent = rounded_time;
@@ -18,7 +18,7 @@ class timer_thread extends Thread{
                 System.out.println("timer thread shut down");
                 break;
             }
-            System.out.println(i);
+            System.out.println(rounded_time);
         }
 
     }

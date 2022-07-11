@@ -19,6 +19,10 @@ public class Tetris_m extends JFrame {
     static boolean pause = false;
     static boolean gameOver = false;
 
+    // TODO : key input
+    static key_input keys_c;
+    static int k_code = 0;
+
     // TODO : score and time
     static int score = 0;
     static int time_spent = 0;
@@ -70,6 +74,11 @@ public class Tetris_m extends JFrame {
         nb_panel = new JPanel();
         this.add(nb_panel);
         set_nb_panel();
+
+        // TODO : key_input
+        keys_c = new key_input();
+        this.addKeyListener(keys_c);
+
 
         this.setVisible(true);
         this.setResizable(false);

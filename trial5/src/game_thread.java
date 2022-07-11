@@ -9,13 +9,15 @@ public class game_thread extends Thread{
     //JFrame mf = Tetris_m.m_frame;
 
     public void run(){
-        for(int i = 0; i < 1000; i++){
+        int defaultFallingTime = 0;
+        while(true){
+            // key press response should go here
+            update_cBlock_loc_by_key();
 
-            // below for checking line clearing, has to be removed
-            if(i < 20) Tetris_m.status[34][i] = 1;
-            //else Tetris_m.status[i-20][i-20] = 2;
-
-            update_cBock_loc(); // 바닥에 닿았는지 여기서 확인됨
+            if(defaultFallingTime > 500){
+                update_cBock_loc_by_time(); // 시간 경과 따른 block loc 업데이트, 바닥에 닿았는지 여기서 확인됨
+                defaultFallingTime = 0;
+            }
 
             update_stat();
 
@@ -31,16 +33,12 @@ public class game_thread extends Thread{
             Tetris_m.g_panel.revalidate();
             Tetris_m.g_panel.repaint(); //
 
-            // 1. 현재는 여기서 하도록 되어있지만 나중에는 입력에 따라 즉시 동작할 수 있도록 수정해야함
-            // 2. 아마 actionlistener로 입력을 받을 때 즉각 업데이트 할 수 있도록 해야하며 그러기 위해
-            // revalidate, repaint를 특정 시간마다 호출하는 것이 아닌, 특정 사건마다 호출할 수 잇도록 해야한다.
-            // 3. 아마 메인 thread에서 타이머를 잡고 이 시간을 따라가되 입력이 들어올 경우 즉시 반응하도록 구현 메인 class에 작성할 수도
-            // 아니면 일정시간마다 revalidate하되 입력이 들어오는 경우도 revalidate하도록 따로 할 수도, 이 경우 synchronize가 필요할 것
-
+            // 일정시간마다 revalidate하되 입력이 들어오는 경우도 revalidate하도록 따로 할 수도, 이 경우 synchronize가 필요할 것
             try{
-                Thread.sleep(10);
+                Thread.sleep(1);
             }
             catch(Exception e){}
+            defaultFallingTime++;
         }
     }
     /*
@@ -49,31 +47,92 @@ public class game_thread extends Thread{
     충돌이 없는 경우 기존에 stat에 있던 block를 제거하고 자기 자신의 위치값을 업데이트한다.
     stat에 새 위치를 찍는 것은 update_shape_to_stat에서 진행한다.
      */
-    private void update_cBock_loc(){
-        boolean can_proceed = true;
-        // 여기에서 현위치를 주고 다음 위치가 가능한 위치인지 아닌지 판단해 can_proceed를 정한다.
+    private void update_cBlock_loc_by_key(){
 
-        // 그 뒤 bool 값을 토대로 true이면 기존 위치의 stat을 초기화하고 다음 위치에 찍지 않고 냅두며
-        // false이면 hit_floor_or_block을 true로 바꾼다.
+        // update_cBock_loc_by_time()와 마찬가지로 자기 자신과 겹치는 것은 상관 없지만 다른 놈이랑 겹치는 것은 불가하도록 구현
+        // 생각하니까 그냥 첫 시점에 날려버리고 시작하면 불편하게 안해도 되네?
+
         for(uPoint p : Tetris_m.cBlock_loc){
-            boolean collapse_self = false;
+            Tetris_m.status[p.y][p.x] = 0;
+        }
 
+        boolean can_proceed = true;
+        switch (Tetris_m.k_code){
+            case 37:
+                // left move
+                for(uPoint p : Tetris_m.cBlock_loc){
+                    if(p.x == 0){
+                        can_proceed = false;
+                        break;
+                    }
+                    if(Tetris_m.status[p.y][p.x-1] != 0) can_proceed = false;
+                }
+                if(can_proceed){
+                    for(uPoint p : Tetris_m.cBlock_loc) p.x--;
+                }
+                break;
+            case 39:
+                // right move
+                for(uPoint p : Tetris_m.cBlock_loc){
+                    if(p.x == 19){
+                        can_proceed = false;
+                        break;
+                    }
+                    if(Tetris_m.status[p.y][p.x+1] != 0) can_proceed = false;
+                }
+                if(can_proceed){
+                    for(uPoint p : Tetris_m.cBlock_loc) p.x++;
+                }
+                break;
+            case 40:
+                // down move
+                for(uPoint p : Tetris_m.cBlock_loc){
+                    if(p.y == 34){
+                        can_proceed = false;
+                        break;
+                    }
+                    if(Tetris_m.status[p.y+1][p.x] != 0) can_proceed = false;
+                }
+                if(can_proceed){
+                    for(uPoint p : Tetris_m.cBlock_loc) p.y++;
+                }
+                break;
+        }
+
+        // k_code 키보드 입력변수 원위치
+        Tetris_m.k_code = 0;
+    }
+
+    private void update_cBock_loc_by_time(){
+
+        for(uPoint p : Tetris_m.cBlock_loc){
+            Tetris_m.status[p.y][p.x] = 0; // 기존에 있던 위치의 stat 초기화
+        }
+
+        boolean can_proceed = true;
+
+        for(uPoint p : Tetris_m.cBlock_loc){
+            // 여기에서 현위치를 주고 다음 위치가 가능한 위치인지 아닌지 판단해 can_proceed를 정한다.
+
+            // boolean collapse_self = false;
             // 최하단에 닿은 경우
             if(p.y == 34){
                 can_proceed = false;
                 Tetris_m.hit_floor_or_block = true;
                 break;
             }
-            collapse_self = uPoint.doesHave(p.x, p.y+1, Tetris_m.cBlock_loc); // 자기 자신과 겹치는 것은 상관 없도록
-
-            if(Tetris_m.status[p.y+1][p.x] != 0 && !collapse_self) can_proceed = false; // 아래에 무언가와 만나고 자신과 충돌한 것이 아닌 경우에만
+//            collapse_self = uPoint.doesHave(p.x, p.y+1, Tetris_m.cBlock_loc); // 자기 자신과 겹치는 것은 상관 없도록
+//            if(Tetris_m.status[p.y+1][p.x] != 0 && !collapse_self) can_proceed = false; // 아래에 무언가와 만나고 자신과 충돌한 것이 아닌 경우에만
+            if(Tetris_m.status[p.y+1][p.x] != 0) can_proceed = false;
         }
+        // 그 뒤 can_proceed 값이 true이면 기존 위치의 stat을 초기화하고 다음 위치에 찍지 않고 냅두며
+        // false이면 hit_floor_or_block을 true로 바꾼다.
         if(!can_proceed){
             Tetris_m.hit_floor_or_block = true;
             return;
         }
         for(uPoint p : Tetris_m.cBlock_loc){
-            Tetris_m.status[p.y][p.x] = 0; // 기존에 있던 위치의 stat 초기화
+            //Tetris_m.status[p.y][p.x] = 0; // 기존에 있던 위치의 stat 초기화
             p.y++;
         }
     }
