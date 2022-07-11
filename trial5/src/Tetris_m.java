@@ -13,7 +13,7 @@ public class Tetris_m extends JFrame {
     static int[][] status = new int[35][20];
 
     static game_panel g_panel;
-    static JPanel nb_panel;
+    static next_block_panel nb_panel;
     static JFrame m_frame;
 
     static game_thread g_thread;
@@ -38,7 +38,7 @@ public class Tetris_m extends JFrame {
     // TODO : current block and next block
     static int cBlock = 21; // 현재 block 종류 (11, 21, 22, 23, 24, 31, 32, 33, 34, 41, 42, 51, 52, 53, 54)
     static ArrayList<uPoint> cBlock_loc = new ArrayList<>(); // 현재 block 위치
-//    static int nBlock = 31;
+    static int nBlock = 1;
 //    static ArrayList<uPoint> nBlock_loc = new ArrayList<>();
     static boolean hit_floor_or_block = true;
 
@@ -54,7 +54,7 @@ public class Tetris_m extends JFrame {
         // ---------------------------------------------
 
         this.setTitle("Tetris_m 2022_7");
-        this.setSize(600, 800);
+        this.setSize(605, 800);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(null);
         m_frame = this;
@@ -75,7 +75,7 @@ public class Tetris_m extends JFrame {
         set_s_panel();
 
         // TODO : next_block_panel
-        nb_panel = new JPanel();
+        nb_panel = new next_block_panel();
         this.add(nb_panel);
         set_nb_panel();
 
@@ -90,7 +90,7 @@ public class Tetris_m extends JFrame {
     }
 
     private void set_t_panel(){
-        t_panel.setBounds(420, 300, 150, 150);
+        t_panel.setBounds(420, 300, 160, 150);
         t_panel.setBorder(new LineBorder(Color.BLACK));
         t_panel.setLayout(null);
         t_label.setBounds(15,20,120,50);
@@ -108,7 +108,7 @@ public class Tetris_m extends JFrame {
     }
 
     private void set_s_panel(){
-        s_panel.setBounds(420, 500, 150, 150);
+        s_panel.setBounds(420, 500, 160, 150);
         s_panel.setBorder(new LineBorder(Color.BLACK));
         s_panel.setLayout(null);
         s_label.setBounds(15,20,120,50);
@@ -120,9 +120,7 @@ public class Tetris_m extends JFrame {
     }
 
     private void set_nb_panel(){
-        nb_panel.setBounds(420, 30, 150, 200);
-        nb_panel.setBorder(new LineBorder(Color.BLACK));
-        nb_panel.setLayout(null);
+        nb_panel.setBounds(420, 30, 160, 200);
     }
 
     public static void restart(){

@@ -32,6 +32,8 @@ public class game_thread extends Thread{
             //Tetris_m.g_panel = new game_panel(); // 이 부분이 문제. 새로운 패널을 만드는 것이 아니라 기존 패널을 revalidate해야 한다.
             Tetris_m.g_panel.revalidate();
             Tetris_m.g_panel.repaint(); //
+            Tetris_m.nb_panel.revalidate();
+            Tetris_m.nb_panel.repaint();
 
             // 일정시간마다 revalidate하되 입력이 들어오는 경우도 revalidate하도록 따로 할 수도, 이 경우 synchronize가 필요할 것
             try{
@@ -101,6 +103,7 @@ public class game_thread extends Thread{
                 break;
             case 38:
                 // up invert
+
                 break;
             case 32:
                 // space
@@ -118,6 +121,7 @@ public class game_thread extends Thread{
                         break;
                     }
                 }
+                break;
         }
 
         // k_code 키보드 입력변수 원위치
@@ -206,9 +210,9 @@ public class game_thread extends Thread{
     private void update_nBlock_and_update_stat(){
         // cBlock을 update_stat 이전에 바꾸는 경우 코드가 꼬이므로 update_stat 이후에 바뀌도록 한다.
         // cBlock_loc은 물론 stat도 업데이트 하되 여기서 충돌이 나는 경우 game over 이다.
-        int nBlockShape = (int)(Math.random()*5) + 1; // 0부터 4의 난수
+        //int nBlockShape = (int)(Math.random()*5) + 1; // 0부터 4의 난수
         Tetris_m.cBlock_loc.clear();
-        switch (nBlockShape){
+        switch (Tetris_m.nBlock){
             case 1:
                 Tetris_m.cBlock = 11;
                 Tetris_m.cBlock_loc.add(new uPoint(9,0));
@@ -249,6 +253,8 @@ public class game_thread extends Thread{
         }
         if(uPoint.doesCollide(Tetris_m.cBlock_loc, Tetris_m.status)) Tetris_m.gameOver = true;
         Tetris_m.hit_floor_or_block = false; // 원위치
+
+        Tetris_m.nBlock = (int)(Math.random()*5) + 1; // 다음 블록 설정
     }
 
     private void view_gameOver_frame(){
