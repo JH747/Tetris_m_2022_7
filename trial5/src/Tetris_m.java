@@ -2,6 +2,10 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import static java.util.Arrays.asList;
 
 public class Tetris_m extends JFrame {
 
@@ -38,7 +42,7 @@ public class Tetris_m extends JFrame {
 //    static ArrayList<uPoint> nBlock_loc = new ArrayList<>();
     static boolean hit_floor_or_block = true;
 
-    //static int[] blockShapes = {11, 21, 22, 23, 24, 31, 32, 33, 34, 41, 42, 51, 52, 53, 54}; // 15 개 종류
+    //static List<Integer> nBlockShapes = new ArrayList<>(asList(11,21,31,41,51));
 
     public Tetris_m(){
 
@@ -130,11 +134,7 @@ public class Tetris_m extends JFrame {
         time_spent = 0;
         cBlock = 21;
         cBlock_loc = new ArrayList<>();
-        hit_floor_or_block = true; // so that block canbe generated automatically
-//        cBlock_loc.add(new uPoint(9,0));
-//        cBlock_loc.add(new uPoint(9,1));
-//        cBlock_loc.add(new uPoint(9,2));
-//        cBlock_loc.add(new uPoint(10,2));
+        hit_floor_or_block = true; // so that block can be generated automatically
     }
 
 

@@ -14,6 +14,7 @@ public class key_input implements KeyListener {
         Tetris_m.k_code = e.getKeyCode();
         // up : 38      down : 40
         // left : 37    right : 39
+        // space : 32
     }
 
     @Override

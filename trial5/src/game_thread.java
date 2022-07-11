@@ -14,8 +14,8 @@ public class game_thread extends Thread{
             // key press response should go here
             update_cBlock_loc_by_key();
 
-            if(defaultFallingTime > 500){
-                update_cBock_loc_by_time(); // 시간 경과 따른 block loc 업데이트, 바닥에 닿았는지 여기서 확인됨
+            if(defaultFallingTime > 100){
+                update_cBlock_loc_by_time(); // 시간 경과 따른 block loc 업데이트, 바닥에 닿았는지 여기서 확인됨
                 defaultFallingTime = 0;
             }
 
@@ -47,6 +47,8 @@ public class game_thread extends Thread{
     충돌이 없는 경우 기존에 stat에 있던 block를 제거하고 자기 자신의 위치값을 업데이트한다.
     stat에 새 위치를 찍는 것은 update_shape_to_stat에서 진행한다.
      */
+
+    // 지난 1ms동안 키입력이 있었는지 확인한다.
     private void update_cBlock_loc_by_key(){
 
         // update_cBock_loc_by_time()와 마찬가지로 자기 자신과 겹치는 것은 상관 없지만 다른 놈이랑 겹치는 것은 불가하도록 구현
@@ -97,14 +99,35 @@ public class game_thread extends Thread{
                     for(uPoint p : Tetris_m.cBlock_loc) p.y++;
                 }
                 break;
+            case 38:
+                // up invert
+                break;
+            case 32:
+                // space
+                while(true){
+                    for(uPoint p : Tetris_m.cBlock_loc){
+                        if(p.y == 34){
+                            can_proceed = false;
+                            break;
+                        }
+                    }
+                    if(!can_proceed) break;
+                    for(uPoint p : Tetris_m.cBlock_loc) p.y++;
+                    if(uPoint.doesCollide(Tetris_m.cBlock_loc, Tetris_m.status)){
+                        for(uPoint p : Tetris_m.cBlock_loc) p.y--;
+                        break;
+                    }
+                }
         }
 
         // k_code 키보드 입력변수 원위치
         Tetris_m.k_code = 0;
     }
 
-    private void update_cBock_loc_by_time(){
+    // 지정된 시간이 지났다면 -> cBlock을 아래로 한칸 이동시키되 불가한 경우 hit_floor_or_block = true가 된다.
+    private void update_cBlock_loc_by_time(){
 
+        // moved to here so that there may no need to compare if block collides itself
         for(uPoint p : Tetris_m.cBlock_loc){
             Tetris_m.status[p.y][p.x] = 0; // 기존에 있던 위치의 stat 초기화
         }
@@ -121,22 +144,20 @@ public class game_thread extends Thread{
                 Tetris_m.hit_floor_or_block = true;
                 break;
             }
-//            collapse_self = uPoint.doesHave(p.x, p.y+1, Tetris_m.cBlock_loc); // 자기 자신과 겹치는 것은 상관 없도록
-//            if(Tetris_m.status[p.y+1][p.x] != 0 && !collapse_self) can_proceed = false; // 아래에 무언가와 만나고 자신과 충돌한 것이 아닌 경우에만
             if(Tetris_m.status[p.y+1][p.x] != 0) can_proceed = false;
         }
-        // 그 뒤 can_proceed 값이 true이면 기존 위치의 stat을 초기화하고 다음 위치에 찍지 않고 냅두며
-        // false이면 hit_floor_or_block을 true로 바꾼다.
+
+        // can_proceed 값이 true이면 cBlock_loc 업데이트, false이면 전역변수 업데이트 후 리턴
         if(!can_proceed){
             Tetris_m.hit_floor_or_block = true;
             return;
         }
         for(uPoint p : Tetris_m.cBlock_loc){
-            //Tetris_m.status[p.y][p.x] = 0; // 기존에 있던 위치의 stat 초기화
             p.y++;
         }
     }
 
+    // 현재 게임 상태를 패널에 업데이트시킨다. line clearing을 처리한다.
     private void update_stat(){
         // 블록의 위치 표시는 두 가지 방식 가능
         // 한 개 기준점 중심 상대 위치와 절대 위치, 전자는 이후 오버헤드가 크므로 후자로 한다.
@@ -181,10 +202,11 @@ public class game_thread extends Thread{
         }
     }
 
+    // hit_floor_or_block == true였을 경우 -> 다음 블록을 업데이트 한다. 업데이트된 블록은 다음 loop에 패널에 반영
     private void update_nBlock_and_update_stat(){
         // cBlock을 update_stat 이전에 바꾸는 경우 코드가 꼬이므로 update_stat 이후에 바뀌도록 한다.
         // cBlock_loc은 물론 stat도 업데이트 하되 여기서 충돌이 나는 경우 game over 이다.
-        int nBlockShape = (int)(Math.random()*4) + 1; // 0부터 4의 난수
+        int nBlockShape = (int)(Math.random()*5) + 1; // 0부터 4의 난수
         Tetris_m.cBlock_loc.clear();
         switch (nBlockShape){
             case 1:
