@@ -22,4 +22,8 @@ public class uPoint {
         }
         return false;
     }
+
+    public static uPoint make_new_uPoint_by_ref(int a, int b, uPoint p){
+        return new uPoint(p.x + a, p.y + b);
+    }
 }

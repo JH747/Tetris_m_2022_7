@@ -38,6 +38,7 @@ public class Tetris_m extends JFrame {
     // TODO : current block and next block
     static int cBlock = 21; // 현재 block 종류 (11, 21, 22, 23, 24, 31, 32, 33, 34, 41, 42, 51, 52, 53, 54)
     static ArrayList<uPoint> cBlock_loc = new ArrayList<>(); // 현재 block 위치
+    static uPoint cBlock_ref_point;
     static int nBlock = 1;
 //    static ArrayList<uPoint> nBlock_loc = new ArrayList<>();
     static boolean hit_floor_or_block = true;
@@ -102,7 +103,7 @@ public class Tetris_m extends JFrame {
     }
 
     private void set_g_panel(){
-        g_panel.setBounds(10, 30, 400, 700);
+        g_panel.setBounds(10, 30, 401, 701);
         g_thread = new game_thread();
         g_thread.start();
     }
