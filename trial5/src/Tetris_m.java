@@ -120,10 +120,17 @@ public class Tetris_m extends JFrame {
         s_panel.setBounds(420, 500, 160, 150);
         s_panel.setBorder(new LineBorder(Color.BLACK));
         s_panel.setLayout(null);
-        s_label.setBounds(15,20,120,50);
-        s_label.setBorder(new LineBorder(Color.BLACK));
+        JLabel stext = new JLabel();
+        stext.setBounds(20, 25, 120, 50);
+        stext.setFont(new Font("Arial Bold", Font.ITALIC, 20));
+        stext.setHorizontalAlignment(JLabel.CENTER);
+        stext.setText("Score");
+        s_panel.add(stext);
+        s_label.setBounds(20,75,120,50);
+        //s_label.setBorder(new LineBorder(Color.BLACK));
         s_label.setHorizontalAlignment(JLabel.CENTER);
         s_label.setText(Integer.toString(score));
+        s_label.setFont(new Font("Arial Bold", Font.PLAIN, 20));
         s_panel.add(s_label);
 
     }
