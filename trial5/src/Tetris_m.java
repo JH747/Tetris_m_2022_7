@@ -1,6 +1,8 @@
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,6 +22,7 @@ public class Tetris_m extends JFrame {
     static timer_thread t_thread;
 
     // TODO : game progress control
+    static JPanel pr_panel;
     static boolean pause = false;
     static boolean gameOver = false;
 
@@ -84,6 +87,10 @@ public class Tetris_m extends JFrame {
         keys_c = new key_input();
         this.addKeyListener(keys_c);
 
+        // TODO : pause
+        pr_panel = new JPanel();
+        this.add(pr_panel);
+        set_pr_panel();
 
         this.setVisible(true);
         this.setResizable(false);
@@ -91,7 +98,7 @@ public class Tetris_m extends JFrame {
     }
 
     private void set_t_panel(){
-        t_panel.setBounds(420, 300, 160, 150);
+        t_panel.setBounds(420, 275, 160, 150);
         t_panel.setBorder(new LineBorder(Color.BLACK));
         t_panel.setLayout(null);
         JLabel ttext = new JLabel();
@@ -117,7 +124,7 @@ public class Tetris_m extends JFrame {
     }
 
     private void set_s_panel(){
-        s_panel.setBounds(420, 500, 160, 150);
+        s_panel.setBounds(420, 470, 160, 150);
         s_panel.setBorder(new LineBorder(Color.BLACK));
         s_panel.setLayout(null);
         JLabel stext = new JLabel();
@@ -137,6 +144,36 @@ public class Tetris_m extends JFrame {
 
     private void set_nb_panel(){
         nb_panel.setBounds(420, 30, 160, 200);
+    }
+
+    private void set_pr_panel(){
+        pr_panel.setBounds(420, 660, 160, 70);
+        pr_panel.setBorder(new LineBorder(Color.BLACK));
+        pr_panel.setLayout(null);
+
+        JButton pause_btn = new JButton();
+        pause_btn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try{
+                    g_thread.wait();
+                    t_thread.wait();
+                } catch (Exception e2){}
+
+            }
+        });
+        pause_btn.setBounds(0,0,20, 20);
+        pr_panel.add(pause_btn);
+
+        JButton resume_btn = new JButton();
+        resume_btn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                notifyAll();
+            }
+        });
+        resume_btn.setBounds(50, 0, 20, 20);
+        pr_panel.add(resume_btn);
     }
 
     public static void restart(){

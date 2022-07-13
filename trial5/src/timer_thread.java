@@ -24,7 +24,7 @@ class timer_thread extends Thread{
                 Thread.sleep(1000);
             }catch (InterruptedException e){
                 System.out.println("timer thread shut down");
-                break;
+                return;
             }
             System.out.println(rounded_time);
         }
