@@ -11,7 +11,15 @@ class timer_thread extends Thread{
             long time_passed = System.currentTimeMillis() - time_start;
             int rounded_time = (int) (time_passed/1000);
             Tetris_m.time_spent = rounded_time;
-            Tetris_m.t_label.setText(Integer.toString(rounded_time));
+            int min = rounded_time/60;
+            int sec = rounded_time%60;
+            StringBuilder sb = new StringBuilder();
+            if(min < 10) sb.append(0);
+            sb.append(min);
+            sb.append(":");
+            if(sec < 10) sb.append(0);
+            sb.append(sec);
+            Tetris_m.t_label.setText(sb.toString());
             try{
                 Thread.sleep(1000);
             }catch (InterruptedException e){

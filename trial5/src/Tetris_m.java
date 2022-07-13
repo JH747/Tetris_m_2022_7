@@ -94,10 +94,18 @@ public class Tetris_m extends JFrame {
         t_panel.setBounds(420, 300, 160, 150);
         t_panel.setBorder(new LineBorder(Color.BLACK));
         t_panel.setLayout(null);
-        t_label.setBounds(15,20,120,50);
-        t_label.setBorder(new LineBorder(Color.BLACK));
+        JLabel ttext = new JLabel();
+        ttext.setBounds(20, 25, 120, 50);
+        ttext.setFont(new Font("Arial Bold", Font.ITALIC, 20));
+        ttext.setHorizontalAlignment(JLabel.CENTER);
+        ttext.setText("Time Spent");
+        t_panel.add(ttext);
+        t_label.setBounds(20,75,120,50);
+        //t_label.setBorder(new LineBorder(Color.BLACK));
+        t_label.setFont(new Font("Arial Bold", Font.PLAIN, 20));
         t_label.setHorizontalAlignment(JLabel.CENTER);
         t_panel.add(t_label);
+
         t_thread = new timer_thread();
         t_thread.start();
     }
