@@ -162,7 +162,7 @@ public class game_thread extends Thread{
 
         JFrame gameOver_frame = new JFrame();
         gameOver_frame.setTitle("Warning!");
-        gameOver_frame.setSize(300, 200);
+        gameOver_frame.setSize(310, 200);
         gameOver_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameOver_frame.setLayout(null);
 
@@ -207,9 +207,9 @@ public class game_thread extends Thread{
         });
         restart_btn.setText("Restart");
         restart_btn.setFont(new Font("Arial Bold", Font.PLAIN, 15));
-        restart_btn.setBounds(0,125,100,50);
+        restart_btn.setBounds(25,110,100,40);
         restart_btn.setHorizontalAlignment(JLabel.CENTER);
-        restart_btn.setBorder(new LineBorder(Color.BLACK));
+        //restart_btn.setBorder(new LineBorder(Color.BLACK));
         gameOver_frame.add(restart_btn);
 
         JButton exit_btn = new JButton();
@@ -221,9 +221,9 @@ public class game_thread extends Thread{
         });
         exit_btn.setText("Exit");
         exit_btn.setFont(new Font("Arial Bold", Font.PLAIN, 15));
-        exit_btn.setBounds(150,125,100,50);
+        exit_btn.setBounds(175,110,100,40);
         exit_btn.setHorizontalAlignment(JLabel.CENTER);
-        exit_btn.setBorder(new LineBorder(Color.BLACK));
+        //exit_btn.setBorder(new LineBorder(Color.BLACK));
         gameOver_frame.add(exit_btn);
 
         gameOver_frame.setVisible(true);
