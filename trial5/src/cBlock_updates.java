@@ -2,14 +2,14 @@ import java.util.ArrayList;
 
 public class cBlock_updates {
 
-    public static void update_cBlock_loc_by_key(){
+    public static boolean update_cBlock_loc_by_key(){
         // update_cBock_loc_by_time()와 마찬가지로 자기 자신과 겹치는 것은 상관 없지만 다른 놈이랑 겹치는 것은 불가하도록 구현
         // 생각하니까 그냥 첫 시점에 날려버리고 시작하면 불편하게 안해도 되네?
 
         for(uPoint p : Tetris_m.cBlock_loc){
             Tetris_m.status[p.y][p.x] = 0;
         }
-
+        boolean need_repaint = true;
         boolean can_proceed = true;
         switch (Tetris_m.k_code){
             case 37:
@@ -77,10 +77,14 @@ public class cBlock_updates {
                     }
                 }
                 break;
+            default:
+                need_repaint = false;
+                break;
         }
 
         // k_code 키보드 입력변수 원위치
         Tetris_m.k_code = 0;
+        return need_repaint;
     }
 
     public static void update_cBlock_loc_by_time(){

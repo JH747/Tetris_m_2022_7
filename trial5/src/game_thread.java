@@ -10,16 +10,18 @@ public class game_thread extends Thread{
 
     public void run(){
         int defaultFallingTime = 0;
+        boolean need_repaint = false; // key 혹은 시간 경과에 의해 현상에 변화가 있는 경우에만 true
 
         while(true){
             if(!work) Thread.yield();
             else{
                 // key press response should go here
-                cBlock_updates.update_cBlock_loc_by_key();
+                need_repaint = cBlock_updates.update_cBlock_loc_by_key();
 
                 if(defaultFallingTime > Tetris_m.speed){
                     cBlock_updates.update_cBlock_loc_by_time(); // 시간 경과 따른 block loc 업데이트, 바닥에 닿았는지 여기서 확인됨
                     defaultFallingTime = 0;
+                    need_repaint = true;
                 }
 
                 update_stat();
@@ -33,10 +35,13 @@ public class game_thread extends Thread{
                 }
 
                 //Tetris_m.g_panel = new game_panel(); // 이 부분이 문제. 새로운 패널을 만드는 것이 아니라 기존 패널을 revalidate해야 한다.
-                Tetris_m.g_panel.revalidate();
-                Tetris_m.g_panel.repaint(); //
-                Tetris_m.nb_panel.revalidate();
-                Tetris_m.nb_panel.repaint();
+                if(need_repaint){
+                    Tetris_m.g_panel.revalidate();
+                    Tetris_m.g_panel.repaint(); //
+                    Tetris_m.nb_panel.revalidate();
+                    Tetris_m.nb_panel.repaint();
+                }
+                need_repaint = false;
 
                 // 일정시간마다 revalidate하되 입력이 들어오는 경우도 revalidate하도록 따로 할 수도, 이 경우 synchronize가 필요할 것
                 try{
