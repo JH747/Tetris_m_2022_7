@@ -152,7 +152,7 @@ public class Tetris_m extends JFrame {
         pr_panel.setLayout(null);
 
         JButton pause_btn = new JButton();
-        //pause_btn.setDefaultCapable(false);
+        pause_btn.setFocusable(false);
         pause_btn.setText("p");
         pause_btn.addActionListener(new ActionListener() {
             @Override
@@ -165,6 +165,7 @@ public class Tetris_m extends JFrame {
         pr_panel.add(pause_btn);
 
         JButton resume_btn = new JButton();
+        resume_btn.setFocusable(false);
         resume_btn.setText("r");
         resume_btn.addActionListener(new ActionListener() {
             @Override
