@@ -17,7 +17,7 @@ public class game_thread extends Thread{
                 // key press response should go here
                 cBlock_updates.update_cBlock_loc_by_key();
 
-                if(defaultFallingTime > 100){
+                if(defaultFallingTime > Tetris_m.speed){
                     cBlock_updates.update_cBlock_loc_by_time(); // 시간 경과 따른 block loc 업데이트, 바닥에 닿았는지 여기서 확인됨
                     defaultFallingTime = 0;
                 }
