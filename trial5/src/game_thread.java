@@ -6,41 +6,45 @@ import java.awt.event.ActionListener;
 
 public class game_thread extends Thread{
 
-    //JFrame mf = Tetris_m.m_frame;
+    public boolean work = true;
 
     public void run(){
         int defaultFallingTime = 0;
+
         while(true){
-            // key press response should go here
-            cBlock_updates.update_cBlock_loc_by_key();
+            if(!work) Thread.yield();
+            else{
+                // key press response should go here
+                cBlock_updates.update_cBlock_loc_by_key();
 
-            if(defaultFallingTime > 100){
-                cBlock_updates.update_cBlock_loc_by_time(); // 시간 경과 따른 block loc 업데이트, 바닥에 닿았는지 여기서 확인됨
-                defaultFallingTime = 0;
+                if(defaultFallingTime > 100){
+                    cBlock_updates.update_cBlock_loc_by_time(); // 시간 경과 따른 block loc 업데이트, 바닥에 닿았는지 여기서 확인됨
+                    defaultFallingTime = 0;
+                }
+
+                update_stat();
+
+                if(Tetris_m.hit_floor_or_block) update_nBlock_and_update_stat();
+
+                // TODO : game progress control
+                if(Tetris_m.gameOver){
+                    view_gameOver_frame();
+                    break;
+                }
+
+                //Tetris_m.g_panel = new game_panel(); // 이 부분이 문제. 새로운 패널을 만드는 것이 아니라 기존 패널을 revalidate해야 한다.
+                Tetris_m.g_panel.revalidate();
+                Tetris_m.g_panel.repaint(); //
+                Tetris_m.nb_panel.revalidate();
+                Tetris_m.nb_panel.repaint();
+
+                // 일정시간마다 revalidate하되 입력이 들어오는 경우도 revalidate하도록 따로 할 수도, 이 경우 synchronize가 필요할 것
+                try{
+                    Thread.sleep(1);
+                }
+                catch(Exception e){}
+                defaultFallingTime++;
             }
-
-            update_stat();
-
-            if(Tetris_m.hit_floor_or_block) update_nBlock_and_update_stat();
-
-            // TODO : game progress control
-            if(Tetris_m.gameOver){
-                view_gameOver_frame();
-                break;
-            }
-
-            //Tetris_m.g_panel = new game_panel(); // 이 부분이 문제. 새로운 패널을 만드는 것이 아니라 기존 패널을 revalidate해야 한다.
-            Tetris_m.g_panel.revalidate();
-            Tetris_m.g_panel.repaint(); //
-            Tetris_m.nb_panel.revalidate();
-            Tetris_m.nb_panel.repaint();
-
-            // 일정시간마다 revalidate하되 입력이 들어오는 경우도 revalidate하도록 따로 할 수도, 이 경우 synchronize가 필요할 것
-            try{
-                Thread.sleep(1);
-            }
-            catch(Exception e){}
-            defaultFallingTime++;
         }
     }
     /*

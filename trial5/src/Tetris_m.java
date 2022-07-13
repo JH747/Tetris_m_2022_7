@@ -152,27 +152,28 @@ public class Tetris_m extends JFrame {
         pr_panel.setLayout(null);
 
         JButton pause_btn = new JButton();
+        //pause_btn.setDefaultCapable(false);
+        pause_btn.setText("p");
         pause_btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try{
-                    g_thread.wait();
-                    t_thread.wait();
-                } catch (Exception e2){}
-
+                g_thread.work = false;
+                t_thread.work = false;
             }
         });
-        pause_btn.setBounds(0,0,20, 20);
+        pause_btn.setBounds(0,0,40, 40);
         pr_panel.add(pause_btn);
 
         JButton resume_btn = new JButton();
+        resume_btn.setText("r");
         resume_btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                notifyAll();
+                g_thread.work = true;
+                t_thread.work = true;
             }
         });
-        resume_btn.setBounds(50, 0, 20, 20);
+        resume_btn.setBounds(50, 0, 40, 40);
         pr_panel.add(resume_btn);
     }
 
