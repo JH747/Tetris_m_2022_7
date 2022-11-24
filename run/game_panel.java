@@ -10,11 +10,10 @@ public class game_panel extends JPanel {
         this.setBackground(Color.white);
     }
 
-    // 여기에서 그릴 때 혹은 그 직전에  한 행이 전부 0이 아닌 경우 score를 올리고 한 줄을 날려주어야 한다.
-    // 이는 game_thread에서 revalidate 전 미리 진행한다.
+
     @Override
     public void paint(Graphics g){
-        super.paint(g); // --------------------- 반드시 들어가야 한다.
+        super.paint(g); // 
         for(int i = 0; i < 35; i++){
             for(int j = 0; j < 20; j++){
 

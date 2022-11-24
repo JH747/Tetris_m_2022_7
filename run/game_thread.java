@@ -10,7 +10,7 @@ public class game_thread extends Thread{
 
     public void run(){
         int defaultFallingTime = 0;
-        boolean need_repaint = false; // key 혹은 시간 경과에 의해 현상에 변화가 있는 경우에만 true
+        boolean need_repaint = false; // key 
 
         while(true){
             if(!work) Thread.yield();
@@ -19,7 +19,7 @@ public class game_thread extends Thread{
                 need_repaint = cBlock_updates.update_cBlock_loc_by_key();
 
                 if(defaultFallingTime > Tetris_m.speed){
-                    cBlock_updates.update_cBlock_loc_by_time(); // 시간 경과 따른 block loc 업데이트, 바닥에 닿았는지 여기서 확인됨
+                    cBlock_updates.update_cBlock_loc_by_time(); // 
                     defaultFallingTime = 0;
                     need_repaint = true;
                 }
@@ -34,7 +34,7 @@ public class game_thread extends Thread{
                     break;
                 }
 
-                //Tetris_m.g_panel = new game_panel(); // 이 부분이 문제. 새로운 패널을 만드는 것이 아니라 기존 패널을 revalidate해야 한다.
+                //Tetris_m.g_panel = new game_panel(); // 
                 if(need_repaint){
                     Tetris_m.g_panel.revalidate();
                     Tetris_m.g_panel.repaint(); //
@@ -43,7 +43,7 @@ public class game_thread extends Thread{
                 }
                 need_repaint = false;
 
-                // 일정시간마다 revalidate하되 입력이 들어오는 경우도 revalidate하도록 따로 할 수도, 이 경우 synchronize가 필요할 것
+
                 try{
                     Thread.sleep(1);
                 }
@@ -52,37 +52,22 @@ public class game_thread extends Thread{
             }
         }
     }
-    /*
-    current block 위치를 다음 위치로 업데이트
-    다음 위치에서 block 자신을 제외하고 충돌이 일어나는 경우 can_proceed를 false로 hit_floor_or_block을 true로 전환한다.
-    충돌이 없는 경우 기존에 stat에 있던 block를 제거하고 자기 자신의 위치값을 업데이트한다.
-    stat에 새 위치를 찍는 것은 update_shape_to_stat에서 진행한다.
-     */
 
-    // 지난 1ms동안 키입력이 있었는지 확인한다.
-
-
-    // 지정된 시간이 지났다면 -> cBlock을 아래로 한칸 이동시키되 불가한 경우 hit_floor_or_block = true가 된다.
-
-
-    // 현재 게임 상태를 패널에 업데이트시킨다. line clearing을 처리한다.
     private void update_stat(){
-        // 블록의 위치 표시는 두 가지 방식 가능
-        // 한 개 기준점 중심 상대 위치와 절대 위치, 전자는 이후 오버헤드가 크므로 후자로 한다.
+
 
         int block_color = Tetris_m.cBlock / 10;
         // 1 : light gray   2 : red     3 : blue
         // 4 : green        5 : purple
 
-        // 바닥을 친 경우 stat의 일부로 보고 이후의 line clearing의 적용 대상이 되도록 한다.
+
         if(Tetris_m.hit_floor_or_block){
             for(uPoint p : Tetris_m.cBlock_loc){
                 Tetris_m.status[p.y][p.x] = block_color;
             }
         }
 
-        // 여기에서 g_panel revalidate하기 전 stat의 모든 행을 한 번 확인한다. 확인 후 한 행이 모두 0 이 아닌 경우 그 행을 날린다.
-        // tmp_stat에 저장해 둔 뒤 이를 원래 행렬에 덮어씌운다.
+
         int line_clear = 0;
         int[][] tmp_stat = new int[35][20];
         int m = 34, n = 0;
@@ -102,7 +87,7 @@ public class game_thread extends Thread{
         }
         Tetris_m.status = tmp_stat;
 
-        // 바닥을 치지 않은 경우 stat의 일부로 보지 않고 마지막에 추가하여 line clearing의 대상이 되지 않도록 한다.
+
         if(!Tetris_m.hit_floor_or_block){
             for(uPoint p : Tetris_m.cBlock_loc){
                 Tetris_m.status[p.y][p.x] = block_color;
@@ -110,10 +95,9 @@ public class game_thread extends Thread{
         }
     }
 
-    // hit_floor_or_block == true였을 경우 -> 다음 블록을 업데이트 한다. 업데이트된 블록은 다음 loop에 패널에 반영
+
     private void update_nBlock_and_update_stat(){
-        // cBlock을 update_stat 이전에 바꾸는 경우 코드가 꼬이므로 update_stat 이후에 바뀌도록 한다.
-        // cBlock_loc은 물론 stat도 업데이트 하되 여기서 충돌이 나는 경우 game over 이다.
+
         Tetris_m.cBlock_loc.clear();
         switch (Tetris_m.nBlock){
             case 1:
@@ -160,14 +144,14 @@ public class game_thread extends Thread{
                 break;
         }
         if(uPoint.doesCollide(Tetris_m.cBlock_loc, Tetris_m.status)) Tetris_m.gameOver = true;
-        Tetris_m.hit_floor_or_block = false; // 원위치
+        Tetris_m.hit_floor_or_block = false; // 
 
-        Tetris_m.nBlock = (int)(Math.random()*5) + 1; // 다음 블록 설정, 1부터 5의 난수
+        Tetris_m.nBlock = (int)(Math.random()*5) + 1; // 
     }
 
     private void view_gameOver_frame(){
 
-        Tetris_m.t_thread.interrupt(); // 먼저 timer_thread를 날린다.
+        Tetris_m.t_thread.interrupt(); // 
 
         JFrame gameOver_frame = new JFrame();
         gameOver_frame.setTitle("Warning!");
@@ -206,8 +190,8 @@ public class game_thread extends Thread{
             @Override
             public void actionPerformed(ActionEvent e) {
                 gameOver_frame.setVisible(false);
-                Tetris_m.restart(); // shared 전역변수 초기화
-                // IllegalThreadStateException 제거, 하나의 thread를 여러번 start하지 않도록 새로운 thread 생성
+                Tetris_m.restart(); // 
+
                 Tetris_m.g_thread = new game_thread();
                 Tetris_m.t_thread = new timer_thread();
                 Tetris_m.g_thread.start();

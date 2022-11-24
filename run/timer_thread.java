@@ -19,7 +19,7 @@ class timer_thread extends Thread{
             if(!work){
                 if(!stopped) time_stopped_at = System.currentTimeMillis();
                 stopped = true;
-                Thread.yield(); // 무의미한 반복 줄이기 위해 다른 thread에 양보 가능하도록 함.
+                Thread.yield(); // 
             }
             else{
                 c_time = System.currentTimeMillis();

@@ -3,8 +3,7 @@ import java.util.ArrayList;
 public class cBlock_updates {
 
     public static boolean update_cBlock_loc_by_key(){
-        // update_cBock_loc_by_time()와 마찬가지로 자기 자신과 겹치는 것은 상관 없지만 다른 놈이랑 겹치는 것은 불가하도록 구현
-        // 생각하니까 그냥 첫 시점에 날려버리고 시작하면 불편하게 안해도 되네?
+
 
         for(uPoint p : Tetris_m.cBlock_loc){
             Tetris_m.status[p.y][p.x] = 0;
@@ -82,7 +81,6 @@ public class cBlock_updates {
                 break;
         }
 
-        // k_code 키보드 입력변수 원위치
         Tetris_m.k_code = 0;
         return need_repaint;
     }
@@ -91,16 +89,13 @@ public class cBlock_updates {
 
         // moved to here so that there may no need to compare if block collides itself
         for(uPoint p : Tetris_m.cBlock_loc){
-            Tetris_m.status[p.y][p.x] = 0; // 기존에 있던 위치의 stat 초기화
+            Tetris_m.status[p.y][p.x] = 0; // 
         }
 
         boolean can_proceed = true;
 
         for(uPoint p : Tetris_m.cBlock_loc){
-            // 여기에서 현위치를 주고 다음 위치가 가능한 위치인지 아닌지 판단해 can_proceed를 정한다.
 
-            // boolean collapse_self = false;
-            // 최하단에 닿은 경우
             if(p.y == 34){
                 can_proceed = false;
                 Tetris_m.hit_floor_or_block = true;
@@ -109,12 +104,12 @@ public class cBlock_updates {
             if(Tetris_m.status[p.y+1][p.x] != 0) can_proceed = false;
         }
 
-        // can_proceed false이면 전역변수 업데이트 후 리턴
+
         if(!can_proceed){
             Tetris_m.hit_floor_or_block = true;
             return;
         }
-        // can_proceed true이면 cBlock_loc, cBlock_ref_point 업데이트
+
         for(uPoint p : Tetris_m.cBlock_loc){
             p.y++;
         }
